@@ -7,7 +7,10 @@ window.onload = function() { // The onload event (for the windows) fires after a
     width: 480,
     height:  640,
     backgroundColor: 0xff0000,
-    scene: playGame // Phaser scenes take care of cleaning memory and resource management
+    scene: [bootGame, playGame]
+    /* Phaser scenes take care of cleaning memory and resource management
+    It is highly recommended to have at least another scene where to preload the resources
+    The first scene in the array will be the one started at the beginning of the game */
   }
 
 
@@ -23,6 +26,21 @@ window.onload = function() { // The onload event (for the windows) fires after a
 
 
 // Game scenes
+class bootGame extends Phaser.Scene {
+  constructor() {
+    super("BootGame");
+  }
+
+  create() {
+    console.log("Game is booting...");
+    this.scene.start("PlayGame");
+    /*
+    scene.start(key) starts the scene identified by the unique key name, which
+    is the same name you declared in the constructor with super(key).
+    */
+  }
+}
+
 class playGame extends Phaser.Scene {
   constructor() {
     super("PlayGame");
