@@ -6,7 +6,8 @@ window.onload = function() { // The onload event (for the windows) fires after a
        We are also passing gameConfig as an argument into the Phaser.Game at the game variable */
     width: 480,
     height:  640,
-    backgroundColor: 0xff0000
+    backgroundColor: 0xff0000,
+    scene: playGame // Phaser scenes take care of cleaning memory and resource management
   }
 
 
@@ -15,6 +16,21 @@ window.onload = function() { // The onload event (for the windows) fires after a
   window.focus(); // Sets focus to the current window, if you don't focus the current window, keyboard input may not word
   resizeGame(); // Adjust the game size the first time the page is loaded
   window.addEventListener("resize", resizeGame); // Adjust the game size every time the window is resized
+}
+
+
+
+
+
+// Game scenes
+class playGame extends Phaser.Scene {
+  constructor() {
+    super("PlayGame");
+  }
+
+  create() {
+    console.log("This is my awesome game");
+  }
 }
 
 
