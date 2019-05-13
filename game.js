@@ -1,3 +1,4 @@
+/* This can be considered a template */
 var game; // The game variable is outside of the window.onload scope os it is accessible to the resizeGame subroutine
 
 window.onload = function() { // The onload event (for the windows) fires after all objects in the DOM hierarchy have finished loading
