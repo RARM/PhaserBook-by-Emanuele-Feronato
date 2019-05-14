@@ -1,13 +1,12 @@
-/* This can be considered a template */
 var game; // The game variable is outside of the window.onload scope os it is accessible to the resizeGame subroutine
 
 window.onload = function() { // The onload event (for the windows) fires after all objects in the DOM hierarchy have finished loading
   var gameConfig = {
     /* gameConfig: contains some game settings such as width, height and background color
        We are also passing gameConfig as an argument into the Phaser.Game at the game variable */
-    width: 480,
-    height:  640,
-    backgroundColor: 0xff0000,
+    width: 900,
+    height:  900,
+    backgroundColor: 0xECF0F1,
     scene: [bootGame, playGame]
     /* Phaser scenes take care of cleaning memory and resource management
     It is highly recommended to have at least another scene where to preload the resources
@@ -32,6 +31,14 @@ class bootGame extends Phaser.Scene {
     super("BootGame");
   }
 
+  preload() {
+    this.load.image("emptytile", "assets/sprites/emptytile.png");
+    /*
+    load.image(key, url) loads an imagewants as arguments respectively the
+    unique asset key of the image file and the URL of the image.
+    */
+  }
+
   create() {
     console.log("Game is booting...");
     this.scene.start("PlayGame");
@@ -49,6 +56,17 @@ class playGame extends Phaser.Scene {
 
   create() {
     console.log("This is my awesome game");
+
+    for(var i = 0; i < 4; i++) { // Rows
+      for(var j = 0; j < 4; j++) { // Columns
+        this.add.image(120 + j * 220, 120 + i * 220, "emptytile"); // Adding 16 instances of the "emptytile" image
+        /*
+        add.image(x, y, key) places an image on the stage and wants as arguments
+        the x coordinate of the image, in pixels, the y coordinate of the image, in
+        pixels, and the key of the image used.
+        */
+      }
+    }
   }
 }
 
