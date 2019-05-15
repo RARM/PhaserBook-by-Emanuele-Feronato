@@ -1,11 +1,21 @@
 var game; // The game variable is outside of the window.onload scope os it is accessible to the resizeGame subroutine
 
+var gameOptions = { // IT way better to have this information in one variable, and if we need to change them in the furute just change them here than using "search and replace"
+  tileSize: 200, // Size of each tile in pixels
+  tileSpacing: 20, // Space between two tiles, in pixels
+  boardSize: { // Board size, amount of rows and cols
+    rows: 4,
+    cols: 4
+  }
+}
+
+
 window.onload = function() { // The onload event (for the windows) fires after all objects in the DOM hierarchy have finished loading
   var gameConfig = {
     /* gameConfig: contains some game settings such as width, height and background color
        We are also passing gameConfig as an argument into the Phaser.Game at the game variable */
-    width: 900,
-    height:  900,
+    width: gameOptions.boardSize.cols * (gameOptions.tileSize + gameOptions.tileSpacing) + gameOptions.tileSpacing,
+    height:  gameOptions.boardSize.rows * (gameOptions.tileSize + gameOptions.tileSpacing) + gameOptions.tileSpacing,
     backgroundColor: 0xECF0F1,
     scene: [bootGame, playGame]
     /* Phaser scenes take care of cleaning memory and resource management
@@ -59,7 +69,8 @@ class playGame extends Phaser.Scene {
 
     for(var i = 0; i < 4; i++) { // Rows
       for(var j = 0; j < 4; j++) { // Columns
-        this.add.image(120 + j * 220, 120 + i * 220, "emptytile"); // Adding 16 instances of the "emptytile" image
+        var tilePosition = this.getTilePosition(i, j);
+        this.add.image(tilePosition.x, tilePosition.y, "emptytile"); // Adding 16 instances of the "emptytile" image
         /*
         add.image(x, y, key) places an image on the stage and wants as arguments
         the x coordinate of the image, in pixels, the y coordinate of the image, in
@@ -67,6 +78,23 @@ class playGame extends Phaser.Scene {
         */
       }
     }
+  }
+
+  getTilePosition(row, col) {
+    var posX = (col + 1) * gameOptions.tileSpacing + (col + 0.5) * gameOptions.tileSize;
+    var posY = (row + 1) * gameOptions.tileSpacing + (row + 0.5) * gameOptions.tileSize;
+
+    return new Phaser.Geom.Point(posX, posY);
+    /*
+    Geom.Point object represents a location in a two-dimensional coordinate
+    system, where x represents the horizontal axis and y represents the vertical
+    axis.
+
+    To access the values, just use the x and y attributes:
+    var example = new Phaser.Geom.Point(valueX, valueY);
+    example.x == valueX; // true
+    example.y == valueY // true
+    */
   }
 }
 
