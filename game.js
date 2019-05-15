@@ -94,12 +94,17 @@ class playGame extends Phaser.Scene {
         pixels, and the key of the image used.
         */
 
-        this.add.sprite(tilePosition.x, tilePosition.y, "tiles", 0);
+        var tile = this.add.sprite(tilePosition.x, tilePosition.y, "tiles", 0);
         /*
         add.sprite(x, y, key, frame) places an image on the stage and wants as
         arguments the x coordinate of the image, in pixels, the y coordinate of the
         image, in pixels, the key of the image used and optionally the number of the
         frame to display, if a sprite sheet is used. Default value is zero.
+        */
+        tile.visible = false;
+        /*
+        visible property sets visible state of the sprite. Non-visible sprites are not
+        rendered.
         */
       }
     }
