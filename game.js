@@ -10,6 +10,9 @@ var gameOptions = { // IT way better to have this information in one variable, a
 }
 
 
+
+
+
 window.onload = function() { // The onload event (for the windows) fires after all objects in the DOM hierarchy have finished loading
   var gameConfig = {
     /* gameConfig: contains some game settings such as width, height and background color
@@ -47,6 +50,18 @@ class bootGame extends Phaser.Scene {
     load.image(key, url) loads an imagewants as arguments respectively the
     unique asset key of the image file and the URL of the image.
     */
+
+    this.load.spritesheet("tiles", "assets/sprites/tiles.png", {
+        frameWidth: gameOptions.tileSize,
+        frameHeight: gameOptions.tileSize
+    });
+    /*
+    load.spritesheet(key, url, config) loads a sprite sheet and wants as
+    arguments respectively the unique asset key of the file, the URL to load the
+    texture file from and a configuration object with frameWidth value
+    representing the frame width of each tile, in pixels, and frameHeight value
+    representing the frame height of each tile, in pixels.
+    */
   }
 
   create() {
@@ -58,6 +73,8 @@ class bootGame extends Phaser.Scene {
     */
   }
 }
+
+
 
 class playGame extends Phaser.Scene {
   constructor() {
@@ -75,6 +92,14 @@ class playGame extends Phaser.Scene {
         add.image(x, y, key) places an image on the stage and wants as arguments
         the x coordinate of the image, in pixels, the y coordinate of the image, in
         pixels, and the key of the image used.
+        */
+
+        this.add.sprite(tilePosition.x, tilePosition.y, "tiles", 0);
+        /*
+        add.sprite(x, y, key, frame) places an image on the stage and wants as
+        arguments the x coordinate of the image, in pixels, the y coordinate of the
+        image, in pixels, the key of the image used and optionally the number of the
+        frame to display, if a sprite sheet is used. Default value is zero.
         */
       }
     }
