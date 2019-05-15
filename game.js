@@ -84,7 +84,9 @@ class playGame extends Phaser.Scene {
   create() {
     console.log("This is my awesome game");
 
+    this.boardArray = []; // Creating a two dimensional array to store board information
     for(var i = 0; i < 4; i++) { // Rows
+      this.boardArray[i] = [];
       for(var j = 0; j < 4; j++) { // Columns
         var tilePosition = this.getTilePosition(i, j);
         this.add.image(tilePosition.x, tilePosition.y, "emptytile"); // Adding 16 instances of the "emptytile" image
@@ -106,6 +108,11 @@ class playGame extends Phaser.Scene {
         visible property sets visible state of the sprite. Non-visible sprites are not
         rendered.
         */
+
+        this.boardArray[i][j] = { // Object that store each tile information on the board
+            tileValue: 0, // value assigned to the tile
+            tileSprite: tile // this is the sprite so we can manipulate it later
+        }
       }
     }
   }
