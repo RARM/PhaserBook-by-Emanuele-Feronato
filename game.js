@@ -83,6 +83,8 @@ class playGame extends Phaser.Scene {
   }
 
   create() {
+    this.canMove = false; // We will use this attribute to know when the user can move the tiles
+
     console.log("This is my awesome game");
 
     this.boardArray = []; // Creating a two dimensional array to store board information
@@ -182,7 +184,12 @@ class playGame extends Phaser.Scene {
           this.tweens.add({
               targets: [this.boardArray[chosenTile.row][chosenTile.col].tileSprite],
               alpha: 1,
-              duration: gameOptions.tweenSpeed
+              duration: gameOptions.tweenSpeed,
+              callbackScope: this,
+              onComplete: function() {
+                  console.log("Tween completed");
+                  this.canMove = true;
+              }
           });
           /*
           "tweens.add(config)" method creates and executes a tween with the options
@@ -191,6 +198,8 @@ class playGame extends Phaser.Scene {
           "targets" is the array containing all targets affected by the tween.
           "alpha" is the destination alpha.
           "duration" is the duration of the tween in milliseconds.
+          "onComplete" function is executed once the tween is completed.
+          "callbackScope" sets the scope of onComplete callback function.
           */
       }
   }
