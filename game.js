@@ -6,7 +6,8 @@ var gameOptions = { // IT way better to have this information in one variable, a
   boardSize: { // Board size, amount of rows and cols
     rows: 4,
     cols: 4
-  }
+},
+tweenSpeed: 2000 // Tweens to animate tiles
 }
 
 
@@ -171,6 +172,25 @@ class playGame extends Phaser.Scene {
           this.boardArray[chosenTile.row][chosenTile.col].tileSprite.setFrame(0);
           /*
           setFrame(n) method sets the frame the Game Object will use to render with.
+          */
+
+          this.boardArray[chosenTile.row][chosenTile.col].tileSprite.alpha = 0;
+          /*
+          alpha property sets the alpha – or the transparency – of the sprite. alpha range
+          goes from zero – completely transparent – to one – completely opaque.
+          */
+          this.tweens.add({
+              targets: [this.boardArray[chosenTile.row][chosenTile.col].tileSprite],
+              alpha: 1,
+              duration: gameOptions.tweenSpeed
+          });
+          /*
+          "tweens.add(config)" method creates and executes a tween with the options
+          stored in config object.
+
+          "targets" is the array containing all targets affected by the tween.
+          "alpha" is the destination alpha.
+          "duration" is the duration of the tween in milliseconds.
           */
       }
   }
