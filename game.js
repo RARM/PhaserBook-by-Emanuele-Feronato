@@ -10,6 +10,12 @@ var gameOptions = { // IT way better to have this information in one variable, a
 tweenSpeed: 2000 // Tweens to animate tiles
 }
 
+// Game constants for processing user input
+const LEFT = 0;
+const RIGHT = 1;
+const UP = 2;
+const DOWN = 3;
+
 
 
 
@@ -220,12 +226,34 @@ class playGame extends Phaser.Scene {
 
   // User input methods
   handleKey(e) { // Callback function. The event is the argument
-      var keyPressed = e.code;
+//      var keyPressed = e.code;
       /*
       code property of a keyboard event returns the code of the key which fired the
       event.
       */
-      console.log("You pressed key #" + keyPressed);
+//      console.log("You pressed key #" + keyPressed);
+
+
+      if(this.canMove) { // Check if player can move when receiving input
+          switch (e.code) {
+              case "KeyA":
+              case "ArrowLeft":
+                  this.makeMove(LEFT);  // Using constants make code more readable
+                  break;
+              case "KeyD":
+              case "ArrowRight":
+                  this.makeMove(RIGHT);
+                  break;
+              case "KeyW":
+              case "ArrowUp":
+                  this.makeMove(UP);
+                  break;
+              case "KeyS":
+              case "ArrowDown":
+                  this.makeMove(DOWN);
+                  break;
+          }
+      }
   }
 
 
@@ -250,6 +278,12 @@ class playGame extends Phaser.Scene {
       console.log("Movement time: " + swipeTime + " ms");
       console.log("Horizontal distance: " + swipe.x + " pixels");
       console.log("Vertical distance: " + swipe.y + " pixels");
+  }
+
+
+
+  makeMove(d) {
+      console.log("About to move");
   }
 }
 
