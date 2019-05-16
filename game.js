@@ -115,8 +115,16 @@ class playGame extends Phaser.Scene {
         }
       }
     }
+
+    this.addTile();
+    this.addTile();
   }
 
+
+
+
+
+  // Custom methods of the class below
   getTilePosition(row, col) {
     var posX = (col + 1) * gameOptions.tileSpacing + (col + 0.5) * gameOptions.tileSize;
     var posY = (row + 1) * gameOptions.tileSpacing + (row + 0.5) * gameOptions.tileSize;
@@ -132,6 +140,39 @@ class playGame extends Phaser.Scene {
     example.x == valueX; // true
     example.y == valueY // true
     */
+  }
+
+
+
+  addTile() {
+      var emptyTiles = []; // It will store all empty tile we'll find
+
+      for (var i = 0; i < gameOptions.boardSize.rows; i++) { // First, searching for emptyTiles
+          for (var j = 0; j < gameOptions.boardSize.cols; j++) {
+              if (this.boardArray[i][j].tileValue == 0) {
+                  emptyTiles.push({
+                      row: i,
+                      col: j
+                  })
+              }
+          }
+      }
+
+      if (emptyTiles.length > 0) { // Chosing one tile and making it visible
+          var chosenTile = Phaser.Utils.Array.GetRandom(emptyTiles);
+          /*
+          Utils.Array.GetRandom(array) method returns a random element from
+          array.
+          */
+
+          // Showing the tile and updating boardArray
+          this.boardArray[chosenTile.row][chosenTile.col].tileValue = 1;
+          this.boardArray[chosenTile.row][chosenTile.col].tileSprite.visible = true;
+          this.boardArray[chosenTile.row][chosenTile.col].tileSprite.setFrame(0);
+          /*
+          setFrame(n) method sets the frame the Game Object will use to render with.
+          */
+      }
   }
 }
 
