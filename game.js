@@ -121,6 +121,16 @@ class playGame extends Phaser.Scene {
 
     this.addTile();
     this.addTile();
+
+    // Waiting for player input
+    this.input.keyboard.on("keydown", this.handleKey, this);
+    this.input.on("pointerup", this.handleSwipe, this);
+    /*
+    input.keyboard.on(“keydown”, callback, context) executes callback
+    function in context scope when a keyboard key is pressed.
+    input.on(“pointerup”, callback, context) executes callback function
+    in context scope when a pointer – mouse pointer or finger – is released.
+    */
   }
 
 
@@ -202,6 +212,44 @@ class playGame extends Phaser.Scene {
           "callbackScope" sets the scope of onComplete callback function.
           */
       }
+  }
+
+
+
+
+
+  // User input methods
+  handleKey(e) { // Callback function. The event is the argument
+      var keyPressed = e.code;
+      /*
+      code property of a keyboard event returns the code of the key which fired the
+      event.
+      */
+      console.log("You pressed key #" + keyPressed);
+  }
+
+
+
+  handleSwipe(e) {
+      var swipeTime = e.upTime - e.downTime;
+      var swipe = new Phaser.Geom.Point(e.upX - e.downX, e.upY - e.downY);
+      /*
+      downTime property of pointerup event returns the timestamp taken when the
+      input started, in milliseconds.
+
+      upTime property of pointerup event returns the timestamp taken when the
+      input ended, in milliseconds.
+
+      downX and downY properties of pointerup event return respectively the
+      horizontal and vertical coordinates where the input started, in pixels.
+
+      upX and upY properties of pointerup event return respectively the horizontal
+      and vertical coordinates where the input ended, in pixels.
+      */
+
+      console.log("Movement time: " + swipeTime + " ms");
+      console.log("Horizontal distance: " + swipe.x + " pixels");
+      console.log("Vertical distance: " + swipe.y + " pixels");
   }
 }
 
