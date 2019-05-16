@@ -232,7 +232,7 @@ class playGame extends Phaser.Scene {
 
   handleSwipe(e) {
       var swipeTime = e.upTime - e.downTime;
-      var swipe = new Phaser.Geom.Point(e.upX - e.downX, e.upY - e.downY);
+      var swipe = new Phaser.Geom.Point(e.upX - e.downX, e.upY - e.downY); // The distance traveled by the swipe... the pixels will be always working with game size using Phaser input
       /*
       downTime property of pointerup event returns the timestamp taken when the
       input started, in milliseconds.
