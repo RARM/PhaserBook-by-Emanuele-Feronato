@@ -346,6 +346,14 @@ class playGame extends Phaser.Scene {
 
         var tileValue = this.boardArray[curRow][curCol].tileValue;
         if (tileValue != 0) {
+          var newRow = curRow;
+          var newCol = curCol;
+          while (this.isLegalPosition(newRow + dRow, newCol + dCol)) {
+            newRow += dRow;;
+            newCol += dCol;
+          }
+
+
           movedTiles++;
           this.boardArray[curRow][curCol].tileSprite.depth = movedTiles;
           /*
@@ -354,12 +362,20 @@ class playGame extends Phaser.Scene {
           It starts from zero and a game object with a higher depth value will always
           render in front of one with a lower value.
           */
-          var newPos = this.getTilePosition(curRow + dRow, curCol + dCol);
+          var newPos = this.getTilePosition(newRow, newCol);
           this.boardArray[curRow][curCol].tileSprite.x = newPos.x;
           this.boardArray[curRow][curCol].tileSprite.y = newPos.y;
         }
       }
     }
+  }
+
+
+
+  isLegalPosition(row, col) {
+    var rowInside = row >= 0 && row < gameOptions.boardSize.rows;
+    var colInside = col >= 0 && col < gameOptions.boardSize.cols;
+    return rowInside && colInside;
   }
 }
 
