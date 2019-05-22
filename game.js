@@ -339,6 +339,7 @@ class playGame extends Phaser.Scene {
     var firstCol = (d == LEFT) ? 1 : 0;
     var lastCol = gameOptions.boardSize.cols - ((d == RIGHT) ? 1 : 0);
 
+    var movedSomething = false;
     for (var i = firstRow; i < lastRow; i++) {
       for (var j = firstCol; j < lastCol; j++) {
         var curRow = dRow == 1 ? (lastRow - 1) - i : i;
@@ -355,30 +356,37 @@ class playGame extends Phaser.Scene {
 
 
           movedTiles++;
-          this.boardArray[curRow][curCol].tileSprite.depth = movedTiles;
-          /*
-          depth property of a game object sets its depth within the Scene, allowing to
-          change the rendering order.
-          It starts from zero and a game object with a higher depth value will always
-          render in front of one with a lower value.
-          */
-          var newPos = this.getTilePosition(newRow, newCol);
-          this.boardArray[curRow][curCol].tileSprite.x = newPos.x;
-          this.boardArray[curRow][curCol].tileSprite.y = newPos.y;
+          if (newRow != curRow || newCol != curCol) {
+            movedSomething = true;
+            this.boardArray[curRow][curCol].tileSprite.depth = movedTiles;
+            /*
+            depth property of a game object sets its depth within the Scene, allowing to
+            change the rendering order.
+            It starts from zero and a game object with a higher depth value will always
+            render in front of one with a lower value.
+            */
+            var newPos = this.getTilePosition(newRow, newCol);
+            this.boardArray[curRow][curCol].tileSprite.x = newPos.x;
+            this.boardArray[curRow][curCol].tileSprite.y = newPos.y;
 
-          // Merging tiles
-          this.boardArray[curRow][curCol].tileValue = 0;
-          if (this.boardArray[newRow][newCol].tileValue == tileValue) { // In case they have the same number, they merge
-            this.boardArray[newRow][newCol].tileValue++;
-            this.boardArray[curRow][curCol].tileSprite.setFrame(tileValue);
-          } else { // Run code below if they are not supposed to merge
-            this.boardArray[newRow][newCol].tileValue = tileValue;
+            // Merging tiles
+            this.boardArray[curRow][curCol].tileValue = 0;
+            if (this.boardArray[newRow][newCol].tileValue == tileValue) { // In case they have the same number, they merge
+              this.boardArray[newRow][newCol].tileValue++;
+              this.boardArray[curRow][curCol].tileSprite.setFrame(tileValue);
+            } else { // Run code below if they are not supposed to merge
+              this.boardArray[newRow][newCol].tileValue = tileValue;
+            }
           }
         }
       }
     }
 
-    this.refreshBoard();
+    if (movedSomething) {
+      this.refreshBoard();
+    } else {
+      this.canMove = true;
+    }
   }
 
 
