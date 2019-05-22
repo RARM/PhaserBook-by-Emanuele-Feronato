@@ -348,7 +348,7 @@ class playGame extends Phaser.Scene {
         if (tileValue != 0) {
           var newRow = curRow;
           var newCol = curCol;
-          while (this.isLegalPosition(newRow + dRow, newCol + dCol)) {
+          while (this.isLegalPosition(newRow + dRow, newCol + dCol, tileValue)) {
             newRow += dRow;;
             newCol += dCol;
           }
@@ -383,10 +383,17 @@ class playGame extends Phaser.Scene {
 
 
 
-  isLegalPosition(row, col) {
+  isLegalPosition(row, col, value) {
     var rowInside = row >= 0 && row < gameOptions.boardSize.rows;
     var colInside = col >= 0 && col < gameOptions.boardSize.cols;
-    return rowInside && colInside;
+
+    if (!rowInside  || !colInside) {
+      return false;
+    }
+
+    var emptySpot = this.boardArray[row][col].tileValue == 0;
+    var sameValue = this.boardArray[row][col].tileValue == value;
+    return emptySpot || sameValue;
   }
 
 
