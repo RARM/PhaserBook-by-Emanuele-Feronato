@@ -6,8 +6,12 @@ var gameOptions = { // IT way better to have this information in one variable, a
   boardSize: { // Board size, amount of rows and cols
     rows: 4,
     cols: 4
-},
-tweenSpeed: 2000 // Tweens to animate tiles
+  },
+  tweenSpeed: 2000, // Tweens to animate tiles
+  // Below the conditions to consider a swipe
+  swipeMaxTime: 1000, // miliseconds
+  swipeMinDistance: 20, // pixels
+  swipeMinNormal: 0.85 // maximum value of the component (in x and y) of the normalized swipe vector in pixels
 }
 
 // Game constants for processing user input
@@ -259,7 +263,10 @@ class playGame extends Phaser.Scene {
 
 
   handleSwipe(e) {
+    // First, check if the user is allowed to move
+    if (this.canMove) {
       var swipeTime = e.upTime - e.downTime;
+      var fastEnough = swipeTime < gameOptions.swipeMaxTime;
       var swipe = new Phaser.Geom.Point(e.upX - e.downX, e.upY - e.downY); // The distance traveled by the swipe... the pixels will be always working with game size using Phaser input
       /*
       downTime property of pointerup event returns the timestamp taken when the
@@ -275,9 +282,46 @@ class playGame extends Phaser.Scene {
       and vertical coordinates where the input ended, in pixels.
       */
 
-      console.log("Movement time: " + swipeTime + " ms");
-      console.log("Horizontal distance: " + swipe.x + " pixels");
-      console.log("Vertical distance: " + swipe.y + " pixels");
+      var swipeMagnitude = Phaser.Geom.Point.GetMagnitude(swipe);
+      /*
+      GetMagnitude(point) method of Phaser.Geom.Point class returns the
+      magnitude of point, in pixels.
+      */
+      var longEnough = swipeMagnitude > gameOptions.swipeMinDistance;
+
+      // If the user can move, now check if the swipe is a valid swipe according to the gameOptions variables
+      if (longEnough && fastEnough) {
+        Phaser.Geom.Point.SetMagnitude(swipe, 1);
+        /*
+        SetMagnitude(point, magnitude) method of Phaser.Geom.Point class
+        sets the magnitude of point to magnitude value. A value of 1 in magnitude
+        normalizes point.
+        */
+
+        if (swipe.x > gameOptions.swipeMinNormal) {
+          this.makeMove(RIGHT);
+        }
+
+        if (swipe.x < -gameOptions.swipeMinNormal) {
+          this.makeMove(LEFT);
+        }
+
+        if (swipe.y > gameOptions.swipeMinNormal) {
+          this.makeMove(DOWN);
+        }
+
+        if (swipe.y < -gameOptions.swipeMinNormal) {
+          this.makeMove(UP);
+        }
+      }
+    }
+
+    /*
+    console.log("Movement time: " + swipeTime + " ms");
+    console.log("Horizontal distance: " + swipe.x + " pixels");
+    console.log("Vertical distance: " + swipe.y + " pixels");
+    */
+
   }
 
 
