@@ -365,6 +365,15 @@ class playGame extends Phaser.Scene {
           var newPos = this.getTilePosition(newRow, newCol);
           this.boardArray[curRow][curCol].tileSprite.x = newPos.x;
           this.boardArray[curRow][curCol].tileSprite.y = newPos.y;
+
+          // Merging tiles
+          this.boardArray[curRow][curCol].tileValue = 0;
+          if (this.boardArray[newRow][newCol].tileValue == tileValue) { // In case they have the same number, they merge
+            this.boardArray[newRow][newCol].tileValue++;
+            this.boardArray[curRow][curCol].tileSprite.setFrame(tileValue);
+          } else { // Run code below if they are not supposed to merge
+            this.boardArray[newRow][newCol].tileValue = tileValue;
+          }
         }
       }
     }
