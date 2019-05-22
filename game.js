@@ -332,6 +332,8 @@ class playGame extends Phaser.Scene {
     var dRow = (d == LEFT || d == RIGHT) ? 0 : d == UP ? -1 : 1;
     var dCol = (d == UP || d == DOWN) ? 0 : d == LEFT ? -1 : 1;
     this.canMove = false;
+    var movedTiles = 0;
+
     for (var i = 0; i < gameOptions.boardSize.rows; i++) {
       for (var j = 0; j < gameOptions.boardSize.cols; j++) {
         var curRow = dRow == 1 ? (gameOptions.boardSize.rows - 1) - i : i;
@@ -339,6 +341,14 @@ class playGame extends Phaser.Scene {
 
         var tileValue = this.boardArray[curRow][curCol].tileValue;
         if (tileValue != 0) {
+          movedTiles++;
+          this.boardArray[curRow][curCol].tileSprite.depth = movedTiles;
+          /*
+          depth property of a game object sets its depth within the Scene, allowing to
+          change the rendering order.
+          It starts from zero and a game object with a higher depth value will always
+          render in front of one with a lower value.
+          */
           var newPos = this.getTilePosition(curRow + dRow, curCol + dCol);
           this.boardArray[curRow][curCol].tileSprite.x = newPos.x;
           this.boardArray[curRow][curCol].tileSprite.y = newPos.y;
