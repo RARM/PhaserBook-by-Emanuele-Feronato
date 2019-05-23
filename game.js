@@ -124,7 +124,8 @@ class playGame extends Phaser.Scene {
 
         this.boardArray[i][j] = { // Object that store each tile information on the board
             tileValue: 0, // value assigned to the tile
-            tileSprite: tile // this is the sprite so we can manipulate it later
+            tileSprite: tile, // this is the sprite so we can manipulate it later
+            upgraded: false
         }
       }
     }
@@ -373,6 +374,7 @@ class playGame extends Phaser.Scene {
             this.boardArray[curRow][curCol].tileValue = 0;
             if (this.boardArray[newRow][newCol].tileValue == tileValue) { // In case they have the same number, they merge
               this.boardArray[newRow][newCol].tileValue++;
+              this.boardArray[newRow][newCol].upgraded = true;
               this.boardArray[curRow][curCol].tileSprite.setFrame(tileValue);
             } else { // Run code below if they are not supposed to merge
               this.boardArray[newRow][newCol].tileValue = tileValue;
@@ -401,7 +403,8 @@ class playGame extends Phaser.Scene {
 
     var emptySpot = this.boardArray[row][col].tileValue == 0;
     var sameValue = this.boardArray[row][col].tileValue == value;
-    return emptySpot || sameValue;
+    var alreadyUpgraded = this.boardArray[row][col].upgraded;
+    return emptySpot || (sameValue && !alreadyUpgraded);
   }
 
 
@@ -418,6 +421,7 @@ class playGame extends Phaser.Scene {
         if (tileValue > 0) {
           this.boardArray[i][j].tileSprite.visible = true;
           this.boardArray[i][j].tileSprite.setFrame(tileValue - 1);
+          this.boardArray[i][j].upgraded = false;
         } else {
           this.boardArray[i][j].tileSprite.visible = false;
         }
