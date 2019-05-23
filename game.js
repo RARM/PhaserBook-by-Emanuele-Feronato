@@ -330,17 +330,17 @@ class playGame extends Phaser.Scene {
   makeMove(d) {
 //      console.log("About to move");
 
+    this.movingTiles = 0; // This variable keeps the count of tiles moved
+
     var dRow = (d == LEFT || d == RIGHT) ? 0 : d == UP ? -1 : 1;
     var dCol = (d == UP || d == DOWN) ? 0 : d == LEFT ? -1 : 1;
     this.canMove = false;
-    var movedTiles = 0;
 
     var firstRow = (d == UP) ? 1 : 0;
     var lastRow = gameOptions.boardSize.rows - ((d == DOWN) ? 1 : 0);
     var firstCol = (d == LEFT) ? 1 : 0;
     var lastCol = gameOptions.boardSize.cols - ((d == RIGHT) ? 1 : 0);
 
-    var movedSomething = false;
     for (var i = firstRow; i < lastRow; i++) {
       for (var j = firstCol; j < lastCol; j++) {
         var curRow = dRow == 1 ? (lastRow - 1) - i : i;
@@ -356,10 +356,8 @@ class playGame extends Phaser.Scene {
           }
 
 
-          movedTiles++;
           if (newRow != curRow || newCol != curCol) {
-            movedSomething = true;
-            this.boardArray[curRow][curCol].tileSprite.depth = movedTiles;
+            // this.boardArray[curRow][curCol].tileSprite.depth = movedTiles;
             /*
             depth property of a game object sets its depth within the Scene, allowing to
             change the rendering order.
@@ -367,8 +365,13 @@ class playGame extends Phaser.Scene {
             render in front of one with a lower value.
             */
             var newPos = this.getTilePosition(newRow, newCol);
-            this.boardArray[curRow][curCol].tileSprite.x = newPos.x;
-            this.boardArray[curRow][curCol].tileSprite.y = newPos.y;
+
+            this.moveTile(this.boardArray[curRow][curCol].tileSprite, newPos);
+            /*
+            moveTile method will handle tile animation and movement, and has two
+            arguments: the sprite to move and the Point object with the new position of the
+            sprite.
+            */
 
             // Merging tiles
             this.boardArray[curRow][curCol].tileValue = 0;
@@ -384,9 +387,7 @@ class playGame extends Phaser.Scene {
       }
     }
 
-    if (movedSomething) {
-      this.refreshBoard();
-    } else {
+    if (this.movingTiles == 0) {
       this.canMove = true;
     }
   }
@@ -430,6 +431,29 @@ class playGame extends Phaser.Scene {
 
     // After readjusting the tiles, add a tile. This subroutine sets the canMove variable to true again
     this.addTile();
+  }
+
+
+
+  moveTile(tile, point) { // moveTile: handle all tile movement, position and depth
+    this.movingTiles++;
+    tile.depth = this.movingTiles;
+    var distance = Math.abs(tile.x - point.x) + Math.abs(tile.y - point.y);
+
+    this.tweens.add({
+      targets: [tile],
+      x: point.x,
+      y: point.y,
+      duration: gameOptions.tweenSpeed * distance / gameOptions.tileSize,
+      callbackScope: this,
+      onComplete: function () {
+        this.movingTiles--;
+        tile.depth = 0;
+        if (this.movingTiles == 0) {
+          this.refreshBoard();
+        }
+      }
+    })
   }
 }
 
