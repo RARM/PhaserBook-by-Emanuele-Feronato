@@ -364,9 +364,10 @@ class playGame extends Phaser.Scene {
             It starts from zero and a game object with a higher depth value will always
             render in front of one with a lower value.
             */
-            var newPos = this.getTilePosition(newRow, newCol);
 
-            this.moveTile(this.boardArray[curRow][curCol].tileSprite, newPos);
+            var newPos = this.getTilePosition(newRow, newCol);
+            var willUpdate = this.boardArray[newRow][newCol].tileValue == tileValue;
+            this.moveTile(this.boardArray[curRow][curCol].tileSprite, newPos, willUpdate);
             /*
             moveTile method will handle tile animation and movement, and has two
             arguments: the sprite to move and the Point object with the new position of the
@@ -375,10 +376,9 @@ class playGame extends Phaser.Scene {
 
             // Merging tiles
             this.boardArray[curRow][curCol].tileValue = 0;
-            if (this.boardArray[newRow][newCol].tileValue == tileValue) { // In case they have the same number, they merge
+            if (willUpdate) { // In case they have the same number, they merge
               this.boardArray[newRow][newCol].tileValue++;
               this.boardArray[newRow][newCol].upgraded = true;
-              this.boardArray[curRow][curCol].tileSprite.setFrame(tileValue);
             } else { // Run code below if they are not supposed to merge
               this.boardArray[newRow][newCol].tileValue = tileValue;
             }
@@ -435,7 +435,7 @@ class playGame extends Phaser.Scene {
 
 
 
-  moveTile(tile, point) { // moveTile: handle all tile movement, position and depth
+  moveTile(tile, point, upgrade) { // moveTile: handle all tile movement, position and depth
     this.movingTiles++;
     tile.depth = this.movingTiles;
     var distance = Math.abs(tile.x - point.x) + Math.abs(tile.y - point.y);
@@ -447,13 +447,51 @@ class playGame extends Phaser.Scene {
       duration: gameOptions.tweenSpeed * distance / gameOptions.tileSize,
       callbackScope: this,
       onComplete: function () {
-        this.movingTiles--;
-        tile.depth = 0;
-        if (this.movingTiles == 0) {
-          this.refreshBoard();
+        if (upgrade) {
+          this.upgradeTile(tile);
+        } else {
+          this.endTween(tile);
         }
       }
     })
+  }
+
+
+
+  upgradeTile(tile) { // Takes care of upgrading the tile to a bigger number, the result of the merge. Also creates a small animation when they merge
+    tile.setFrame(tile.frame.name + 1);
+    this.tweens.add({
+      targets: [tile],
+      scaleX: 1.1,
+      scaleY: 1.1,
+      duration: gameOptions.tweenSpeed,
+      yoyo: true,
+      repeat: 1,
+      callbackScope: this,
+      onComplete: function () {
+        this.endTween(tile);
+      }
+    })
+    /*
+    In a tween configuration object:
+    "scaleX" is the size along horizontal axis, where 1 = original size.
+
+    "scaleY" is the size along vertical axis, where 1 = original size.
+
+    "yoyo" plays the tween forward and backward if set to true.
+
+    "repeat" is the amount of times tween will be played.
+    */
+  }
+
+
+
+  endTween(tile) {
+    this.movingTiles--;
+    tile.depth = 0;
+    if (this.movingTiles == 0) {
+      this.refreshBoard();
+    }
   }
 }
 
