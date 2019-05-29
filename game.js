@@ -11,7 +11,8 @@ var gameOptions = { // IT way better to have this information in one variable, a
   // Below the conditions to consider a swipe
   swipeMaxTime: 1000, // miliseconds
   swipeMinDistance: 20, // pixels
-  swipeMinNormal: 0.85 // maximum value of the component (in x and y) of the normalized swipe vector in pixels
+  swipeMinNormal: 0.85, // maximum value of the component (in x and y) of the normalized swipe vector in pixels
+  aspectRatio: 16/9 // it stores the aspect ratio of the game
 }
 
 // Game constants for processing user input
@@ -25,11 +26,16 @@ const DOWN = 3;
 
 
 window.onload = function() { // The onload event (for the windows) fires after all objects in the DOM hierarchy have finished loading
+  // This variables allow are for readability, and so it is easy to implement the aspectRatio attribute of the gameOptions object
+  var tileAndSpacing = gameOptions.tileSize + gameOptions.tileSpacing;
+  var width = gameOptions.boardSize.cols * tileAndSpacing;
+  width += gameOptions.tileSpacing;
+
   var gameConfig = {
     /* gameConfig: contains some game settings such as width, height and background color
        We are also passing gameConfig as an argument into the Phaser.Game at the game variable */
-    width: gameOptions.boardSize.cols * (gameOptions.tileSize + gameOptions.tileSpacing) + gameOptions.tileSpacing,
-    height:  gameOptions.boardSize.rows * (gameOptions.tileSize + gameOptions.tileSpacing) + gameOptions.tileSpacing,
+    width: width,
+    height:  width * gameOptions.aspectRatio,
     backgroundColor: 0xECF0F1,
     scene: [bootGame, playGame]
     /* Phaser scenes take care of cleaning memory and resource management
@@ -169,6 +175,11 @@ class playGame extends Phaser.Scene {
   getTilePosition(row, col) {
     var posX = (col + 1) * gameOptions.tileSpacing + (col + 0.5) * gameOptions.tileSize;
     var posY = (row + 1) * gameOptions.tileSpacing + (row + 0.5) * gameOptions.tileSize;
+
+    var boardHeight = gameOptions.boardSize.rows * gameOptions.tileSize;
+    boardHeight += (gameOptions.boardSize.rows + 1) * gameOptions.tileSpacing;
+    var offsetY = (game.config.height - boardHeight) / 2;
+    posY += offsetY;
 
     return new Phaser.Geom.Point(posX, posY);
     /*
