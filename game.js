@@ -7,7 +7,7 @@ var gameOptions = { // IT way better to have this information in one variable, a
     rows: 4,
     cols: 4
   },
-  tweenSpeed: 200, // Tweens to animate tiles
+  tweenSpeed: 50, // Tweens to animate tiles
   // Below the conditions to consider a swipe
   swipeMaxTime: 1000, // miliseconds
   swipeMinDistance: 20, // pixels
@@ -72,6 +72,14 @@ class bootGame extends Phaser.Scene {
     texture file from and a configuration object with frameWidth value
     representing the frame width of each tile, in pixels, and frameHeight value
     representing the frame height of each tile, in pixels.
+    */
+
+    this.load.audio("move", ["assets/sounds/move.ogg", "assets/sounds/move.mp3"]);
+    this.load.audio("grow", ["assets/sounds/grow.ogg", "assets/sounds/grow.mp3"]);
+    /*
+    load.audio(key, audioFiles) handles sound preloading. The first argument
+    is the key, the unique name assigned to the sound, the second is an array of
+    files to be loaded, in different formats.
     */
   }
 
@@ -141,6 +149,15 @@ class playGame extends Phaser.Scene {
     function in context scope when a keyboard key is pressed.
     input.on(“pointerup”, callback, context) executes callback function
     in context scope when a pointer – mouse pointer or finger – is released.
+    */
+
+
+    // Sounds preloaded below
+    this.moveSound = this.sound.add("move");
+    this.growSound = this.sound.add("grow");
+    /*
+    sound.add(key) adds a new audio file to the sound manager. key is the
+    unique name we gave to the sound.
     */
   }
 
@@ -389,6 +406,8 @@ class playGame extends Phaser.Scene {
 
     if (this.movingTiles == 0) {
       this.canMove = true;
+    } else {
+      this.moveSound.play(); // play() method plays a sound.
     }
   }
 
@@ -459,6 +478,7 @@ class playGame extends Phaser.Scene {
 
 
   upgradeTile(tile) { // Takes care of upgrading the tile to a bigger number, the result of the merge. Also creates a small animation when they merge
+    this.growSound.play();
     tile.setFrame(tile.frame.name + 1);
     this.tweens.add({
       targets: [tile],
