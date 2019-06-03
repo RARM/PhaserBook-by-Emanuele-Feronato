@@ -115,6 +115,14 @@ class playGame extends Phaser.Scene {
   create() {
     var restartXY = this.getTilePosition(-0.8, gameOptions.boardSize.cols - 1);
     var restartButton = this.add.sprite(restartXY.x, restartXY.y, "restart");
+    restartButton.setInteractive();
+    /*
+    setInteractive() method enables the game object for input.
+    */
+    restartButton.on("pointerdown", function() {
+      this.scene.start("PlayGame");
+    }, this);
+
     var scoreXY = this.getTilePosition(-0.8, 1);
     this.add.image(scoreXY.x, scoreXY.y, "scorepanel");
     this.add.image(scoreXY.x, scoreXY.y - 70, "scorelabels");
@@ -133,8 +141,19 @@ class playGame extends Phaser.Scene {
     */
     var howTo = this.add.image(game.config.width, 5, "howtoplay");
     howTo.setOrigin(1, 0);
+
     var logo = this.add.sprite(game.config.width / 2, game.config.height, "logo");
     logo.setOrigin(0.5, 1);
+    logo.setInteractive();
+    logo.on("pointerdown", function() {
+      window.location.href = "http://www.emanueleferonato.com/"
+      /*
+      The window.location object can be used to redirect the browser to a new
+      page.
+      window.location.href = URL sets the href value to point to another web site
+      located at URL.
+      */
+    });
 
 
     this.canMove = false; // We will use this attribute to know when the user can move the tiles
