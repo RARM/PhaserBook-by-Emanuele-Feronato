@@ -120,6 +120,9 @@ class playGame extends Phaser.Scene {
   }
 
   create() {
+    // Score system
+    this.score = 0;
+
     var restartXY = this.getTilePosition(-0.8, gameOptions.boardSize.cols - 1);
     var restartButton = this.add.sprite(restartXY.x, restartXY.y, "restart");
     restartButton.setInteractive();
@@ -471,6 +474,7 @@ class playGame extends Phaser.Scene {
             this.boardArray[curRow][curCol].tileValue = 0;
             if (willUpdate) { // In case they have the same number, they merge
               this.boardArray[newRow][newCol].tileValue++;
+              this.score += Math.pow(2, this.boardArray[newRow][newCol].tileValue); // Takes care of adding the score when updating a tile
               this.boardArray[newRow][newCol].upgraded = true;
             } else { // Run code below if they are not supposed to merge
               this.boardArray[newRow][newCol].tileValue = tileValue;
@@ -506,6 +510,12 @@ class playGame extends Phaser.Scene {
 
 
   refreshBoard() {
+    this.scoreText.text = this.score.toString(); // This line updates the score in the game inteface
+    /*
+    text property of a bitmap text sets the text to show.
+    toString JavaScript method converts a number to a string.
+    */
+
     for (var i = 0; i < gameOptions.boardSize.rows; i++) {
       for (var j = 0; j < gameOptions.boardSize.cols; j++) {
         var spritePosition = this.getTilePosition(i, j); // Returns the coordinates of the tile default position according to its row and column
