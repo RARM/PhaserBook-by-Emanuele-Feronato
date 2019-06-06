@@ -12,7 +12,8 @@ var gameOptions = { // IT way better to have this information in one variable, a
   swipeMaxTime: 1000, // miliseconds
   swipeMinDistance: 20, // pixels
   swipeMinNormal: 0.85, // maximum value of the component (in x and y) of the normalized swipe vector in pixels
-  aspectRatio: 16/9 // it stores the aspect ratio of the game
+  aspectRatio: 16/9, // it stores the aspect ratio of the game
+  localStorageName: "topscore4096"
 }
 
 // Game constants for processing user input
@@ -143,7 +144,16 @@ class playGame extends Phaser.Scene {
     key bitmap text at coordinates x, y.
     */
     textXY = this.getTilePosition(-0.92, 1.1);
-    this.bestScoreText = this.add.bitmapText(textXY.x, textXY.y, "font", "0");
+    this.bestScore = localStorage.getItem(gameOptions.localStorageName); // Local storage for best score
+    if(this.bestScore == null) {
+      this.bestScore = 0;
+    }
+    /*
+    localStorage.getItem(keyName) method of local storage returns keyName's
+    value or null if keyName does not exist.
+    null represents JavaScript's intentional absence of any value.
+    */
+    this.bestScoreText = this.add.bitmapText(textXY.x, textXY.y, "font", this.bestScore.toString());
 
     var gameTitle = this.add.image(10, 5, "gametitle");
     gameTitle.setOrigin(0, 0);
@@ -515,6 +525,16 @@ class playGame extends Phaser.Scene {
     text property of a bitmap text sets the text to show.
     toString JavaScript method converts a number to a string.
     */
+
+    if (this.score > this.bestScore) { // The game only updates the best score if it is less than the score
+      this.bestScore = this.score;
+      localStorage.setItem(gameOptions.localStorageName, this.bestScore); // Saves the score in the local storage
+      /*
+      localStorage.setItem(keyName, keyValue) method adds keyName to the
+      storage, or updates it to keyValue if it already exists.
+      */
+      this.bestScoreText.text = this.bestScore.toString();
+    }
 
     for (var i = 0; i < gameOptions.boardSize.rows; i++) {
       for (var j = 0; j < gameOptions.boardSize.cols; j++) {
