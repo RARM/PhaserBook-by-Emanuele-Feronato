@@ -93,6 +93,13 @@ class bootGame extends Phaser.Scene {
     is the key, the unique name assigned to the sound, the second is an array of
     files to be loaded, in different formats.
     */
+
+    this.load.bitmapFont("font", "assets/fonts/font.png", "assets/fonts/font.fnt");
+    /*
+    load.bitmapFont(key, texturePath, xmlPath) method adds new bitmap
+    font loading request, giving it unique key name and looking for texturePath
+    image file and xmlPath data file.
+    */
   }
 
   create() {
@@ -126,6 +133,15 @@ class playGame extends Phaser.Scene {
     var scoreXY = this.getTilePosition(-0.8, 1);
     this.add.image(scoreXY.x, scoreXY.y, "scorepanel");
     this.add.image(scoreXY.x, scoreXY.y - 70, "scorelabels");
+    var textXY = this.getTilePosition(-0.92, -0.4);
+    this.scoreText = this.add.bitmapText(textXY.x, textXY.y, "font", "0");
+    /*
+    add.bitmapText(x, y, key, text) method adds text string written with
+    key bitmap text at coordinates x, y.
+    */
+    textXY = this.getTilePosition(-0.92, 1.1);
+    this.bestScoreText = this.add.bitmapText(textXY.x, textXY.y, "font", "0");
+
     var gameTitle = this.add.image(10, 5, "gametitle");
     gameTitle.setOrigin(0, 0);
     /*
