@@ -511,6 +511,10 @@ class playGame extends Phaser.Scene {
       return false;
     }
 
+    if (this.boardArray[row][col].tileValue == 12) {
+      return false;
+    }
+
     var emptySpot = this.boardArray[row][col].tileValue == 0;
     var sameValue = this.boardArray[row][col].tileValue == value;
     var alreadyUpgraded = this.boardArray[row][col].upgraded;
